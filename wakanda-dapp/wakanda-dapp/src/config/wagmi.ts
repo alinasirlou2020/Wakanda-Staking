@@ -1,6 +1,6 @@
 import { http, createConfig } from "wagmi";
 import { defineChain } from "viem";
-import { injected, walletConnect } from "wagmi/connectors"; // اضافه کردن walletConnect
+import { injected, walletConnect } from "wagmi/connectors";
 
 export const polygonAmoy = defineChain({
   id: 80002,
@@ -18,9 +18,10 @@ export const polygonAmoy = defineChain({
 export const wagmiConfig = createConfig({
   chains: [polygonAmoy],
   connectors: [
-    injected({ shimDisconnect: true }), // اولویت اول با کیف پولِ تزریق شده (متامسک)
+    injected({ shimDisconnect: true }),
     walletConnect({
       projectId: "542c06313f51345944e5c24809c43754",
+      showQrModal: true, // این باعث می‌شود مودال حرفه‌ای خودِ wagmi باز شود
     }),
   ],
   transports: {
