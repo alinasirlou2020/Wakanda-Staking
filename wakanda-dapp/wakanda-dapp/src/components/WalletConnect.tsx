@@ -18,27 +18,20 @@ export function WalletConnect() {
   // State 1: Wallet Not Connected
   if (!isConnected) {
     return (
-      <button
-        onClick={() => {
-          // اول متامسک (injected) را جستجو کن
-          const injected = connectors.find((c) => c.id === "injected");
-          const wcConnector = connectors.find((c) =>
-            c.id.includes("walletConnect"),
-          );
-
-          // اولویت با متامسک است
-          const connectorToUse = injected || wcConnector;
-
-          if (connectorToUse) {
-            connect({ connector: connectorToUse });
-          }
-        }}
-        className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 hover:brightness-110 active:scale-95 font-sans"
-      >
-        Connect Wallet
-      </button>
+      <div className="flex flex-col gap-2">
+        {connectors.map((connector) => (
+          <button
+            key={connector.id}
+            onClick={() => connect({ connector })}
+            className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 hover:brightness-110 active:scale-95 font-sans"
+          >
+            Connect {connector.name}
+          </button>
+        ))}
+      </div>
     );
   }
+  
   // State 2: Connected to the Wrong Network
   if (chain?.id !== polygonAmoy.id) {
     return (
