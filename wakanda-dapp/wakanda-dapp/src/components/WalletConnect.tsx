@@ -15,23 +15,47 @@ export function WalletConnect() {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  // State 1: Wallet Not Connected
+  // جایگزین بخشِ State 1 در WalletConnect.tsx
   if (!isConnected) {
     return (
-      <div className="flex flex-col gap-2">
-        {connectors.map((connector) => (
-          <button
-            key={connector.id}
-            onClick={() => connect({ connector })}
-            className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 hover:brightness-110 active:scale-95 font-sans"
-          >
-            Connect {connector.name}
-          </button>
-        ))}
-      </div>
+      <>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 hover:brightness-110 active:scale-95 font-sans"
+        >
+          Connect Wallet
+        </button>
+
+        {isModalOpen &&
+          createPortal(
+            <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+              <div
+                className="fixed inset-0 bg-black/60 backdrop-blur-md"
+                onClick={() => setIsModalOpen(false)}
+              />
+              <div className="relative z-50 w-full max-w-sm rounded-2xl border border-purple-500/30 bg-[#110d24] p-6 text-center">
+                <h3 className="text-white font-bold mb-4">Select a Wallet</h3>
+                <div className="flex flex-col gap-2">
+                  {connectors.map((connector) => (
+                    <button
+                      key={connector.id}
+                      onClick={() => {
+                        connect({ connector });
+                        setIsModalOpen(false);
+                      }}
+                      className="w-full rounded-xl bg-white/5 border border-white/10 py-3 text-sm font-bold text-gray-300 hover:bg-white/10 transition"
+                    >
+                      {connector.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )}
+      </>
     );
   }
-  
   // State 2: Connected to the Wrong Network
   if (chain?.id !== polygonAmoy.id) {
     return (
