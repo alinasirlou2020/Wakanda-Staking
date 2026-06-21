@@ -1,0 +1,22 @@
+alina@Ali_nasirlou MINGW64 ~/OneDrive/Dokumenter/Blockchain/Projects/Marvel/Wakanda_Staking (master)
+$ slither .
+'forge clean' running (wd: C:\Users\alina\OneDrive\Dokumenter\Blockchain\Projects\Marvel\Wakanda_Staking)
+'forge config --json' running
+'forge build --build-info --skip ./test/** ./script/** --force' running (wd: C:\Users\alina\OneDrive\Dokumenter\Blockchain\Projects\Marvel\Wakanda_Staking)
+INFO:Detectors:
+Detector: timestamp
+WakandaStaking.withdraw(uint256) (src/WakandaStaking.sol#139-160) uses timestamp for comparisons
+        Dangerous comparisons:
+        - block.timestamp < stakers[msg.sender].lastStakeTimestamp + 86400 (src/WakandaStaking.sol#147)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Detector: missing-inheritance
+VibraniumToken (src/VibraniumToken.sol#12-82) should inherit from IVibranium (src/WakandaStaking.sol#9-11)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-inheritance
+INFO:Detectors:
+Detector: naming-convention
+Parameter WakandaStaking.setRewardRate(uint256)._newRate (src/WakandaStaking.sol#184) is not in mixedCase
+Variable WakandaStaking.STAKING_TOKEN (src/WakandaStaking.sol#41) is not in mixedCase
+Variable WakandaStaking.REWARD_TOKEN (src/WakandaStaking.sol#42) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Slither:. analyzed (19 contracts with 101 detectors), 5 result(s) found
