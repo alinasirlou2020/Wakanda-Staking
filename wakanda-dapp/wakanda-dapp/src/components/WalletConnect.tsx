@@ -11,7 +11,6 @@ export function WalletConnect() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
@@ -21,13 +20,15 @@ export function WalletConnect() {
     return (
       <button
         onClick={() => {
-          // سعی می‌کند ابتدا WalletConnect را پیدا کند، اگر نبود سراغ Injected می‌رود
+          // اول متامسک (injected) را جستجو کن
+          const injected = connectors.find((c) => c.id === "injected");
           const wcConnector = connectors.find((c) =>
             c.id.includes("walletConnect"),
           );
-          const injected = connectors.find((c) => c.id === "injected");
 
-          const connectorToUse = wcConnector || injected;
+          // اولویت با متامسک است
+          const connectorToUse = injected || wcConnector;
+
           if (connectorToUse) {
             connect({ connector: connectorToUse });
           }
@@ -38,7 +39,6 @@ export function WalletConnect() {
       </button>
     );
   }
-
   // State 2: Connected to the Wrong Network
   if (chain?.id !== polygonAmoy.id) {
     return (
