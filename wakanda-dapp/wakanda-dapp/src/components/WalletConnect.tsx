@@ -11,7 +11,6 @@ export function WalletConnect() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const injectedConnector = connectors.find((c) => c.id === "injected");
 
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
@@ -21,9 +20,18 @@ export function WalletConnect() {
   if (!isConnected) {
     return (
       <button
-        onClick={() =>
-          injectedConnector && connect({ connector: injectedConnector })
-        }
+        onClick={() => {
+          // سعی می‌کند ابتدا WalletConnect را پیدا کند، اگر نبود سراغ Injected می‌رود
+          const wcConnector = connectors.find((c) =>
+            c.id.includes("walletConnect"),
+          );
+          const injected = connectors.find((c) => c.id === "injected");
+
+          const connectorToUse = wcConnector || injected;
+          if (connectorToUse) {
+            connect({ connector: connectorToUse });
+          }
+        }}
         className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 hover:brightness-110 active:scale-95 font-sans"
       >
         Connect Wallet
