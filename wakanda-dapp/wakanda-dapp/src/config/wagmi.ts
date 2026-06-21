@@ -21,7 +21,7 @@ export const wagmiConfig = createConfig({
     injected({ shimDisconnect: true }),
     walletConnect({
       projectId: "542c06313f51345944e5c24809c43754",
-      showQrModal: true, // این باعث می‌شود مودال حرفه‌ای خودِ wagmi باز شود
+      showQrModal: true,
     }),
   ],
   transports: {

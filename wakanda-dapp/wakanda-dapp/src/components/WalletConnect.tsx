@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { createPortal } from "react-dom";
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { polygonAmoy } from "../config/wagmi";
 
@@ -9,26 +7,18 @@ export function WalletConnect() {
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
+  // حالت ۱: متصل نیست
   if (!isConnected) {
     return (
       <button
         onClick={() => {
-          // اگر در موبایل هستی، مستقیماً WalletConnect را باز کن
-          // اگر دسکتاپ هستی، مودال انتخابی را باز کن
-          const isMobile = /iPhone|iPad|iPod|Android/i.test(
-            navigator.userAgent,
-          );
-          if (isMobile) {
-            connect({ connector: connectors[1] }); // فرض بر اینکه walletConnect دوم است
-          } else {
-            setIsModalOpen(true);
-          }
+          // استفاده از کانکتورِ walletConnect برای باز شدنِ خودکارِ مودالِ استاندارد
+          // کانکتور شماره ۱ در لیست ما walletConnect است
+          connect({ connector: connectors[1] });
         }}
         className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 hover:brightness-110 active:scale-95 font-sans"
       >
@@ -37,6 +27,7 @@ export function WalletConnect() {
     );
   }
 
+  // حالت ۲: شبکه اشتباه است
   if (chain?.id !== polygonAmoy.id) {
     return (
       <button
@@ -48,6 +39,7 @@ export function WalletConnect() {
     );
   }
 
+  // حالت ۳: متصل است
   return (
     <div
       className="flex items-center gap-3 font-sans"
@@ -58,34 +50,11 @@ export function WalletConnect() {
         {chain.name}
       </div>
       <button
-        onClick={() => setIsModalOpen(true)}
-        className="rounded-xl border border-white/10 bg-[#090615] px-4 py-2.5 text-xs font-mono font-bold text-gray-300 transition-all hover:border-purple-500/50 hover:text-purple-400"
+        onClick={() => disconnect()}
+        className="rounded-xl border border-white/10 bg-[#090615] px-4 py-2.5 text-xs font-mono font-bold text-gray-300 transition-all hover:border-red-500/50 hover:text-red-400"
       >
-        {address ? formatAddress(address) : "Connected"}
+        {address ? formatAddress(address) : "Connected"} (Disconnect)
       </button>
-
-      {isModalOpen &&
-        createPortal(
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
-            <div
-              className="fixed inset-0 bg-black/60 backdrop-blur-md"
-              onClick={() => setIsModalOpen(false)}
-            />
-            <div className="relative z-50 w-full max-w-sm rounded-2xl border border-purple-500/30 bg-[#110d24] p-6 shadow-xl text-center">
-              <h3 className="text-white font-bold mb-4">Disconnect Wallet</h3>
-              <button
-                onClick={() => {
-                  disconnect();
-                  setIsModalOpen(false);
-                }}
-                className="w-full rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3 text-sm font-bold text-white"
-              >
-                Confirm Disconnect
-              </button>
-            </div>
-          </div>,
-          document.body,
-        )}
     </div>
   );
 }
