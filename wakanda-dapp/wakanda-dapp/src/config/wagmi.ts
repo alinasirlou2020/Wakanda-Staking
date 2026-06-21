@@ -18,8 +18,7 @@ export const polygonAmoy = defineChain({
 export const wagmiConfig = createConfig({
   chains: [polygonAmoy],
   connectors: [
-    injected(),
-    // اینجا باید projectId خودت را از سایت walletconnect.com بگیری و بگذاری
+    injected({ shimDisconnect: true }), // اولویت اول با کیف پولِ تزریق شده (متامسک)
     walletConnect({
       projectId: "542c06313f51345944e5c24809c43754",
     }),
